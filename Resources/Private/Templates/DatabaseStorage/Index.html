@@ -36,7 +36,7 @@
               <td title="{identifier}">{identifier}</td>
               <td class="neos-action size-sm">
                 <div class="neos-pull-right">
-                  <f:link.action action="show" arguments="{identifier: identifier}" class="neos-button"><i class="fas fa-eye icon-eye icon-white"></i></f:link.action>
+                  <f:link.action action="show" arguments="{identifier: identifier, currentPage: 1}" class="neos-button"><i class="fas fa-eye icon-eye icon-white"></i></f:link.action>
                   <button class="neos-button neos-button-primary" title="{neos:backend.translate(id: 'storage.export', arguments: {0: identifier})}" data-toggle="modal" href="#export-{identifier}">
                     <i class="fas fa-download icon-download icon-white"></i>
                   </button>

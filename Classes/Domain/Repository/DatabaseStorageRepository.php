@@ -118,7 +118,7 @@ class DatabaseStorageRepository extends Repository
 
     /**
      * Removes an object from this repository.
-     * 
+     *
      * If $removeAttachedResources is true, checks if the given storage entry
      * has a property with a resource. If a resource property is found,
      * the resource will be deleted.
@@ -193,5 +193,25 @@ class DatabaseStorageRepository extends Repository
         );
 
         return $query->count();
+    }
+
+    /**
+     * Finds database storage entries by storage identifier with pagination.
+     *
+     * @param string $storageIdentifier
+     * @param int $limit
+     * @param int $offset
+     * @return \Neos\Flow\Persistence\QueryResultInterface
+     */
+    public function findPaginatedByStorageidentifier(string $storageIdentifier, int $limit, int $offset): \Neos\Flow\Persistence\QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->equals('storageidentifier', $storageIdentifier)
+        )
+            ->setLimit($limit)
+            ->setOffset($offset);
+
+        return $query->execute();
     }
 }
