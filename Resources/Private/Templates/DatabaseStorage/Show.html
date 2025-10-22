@@ -100,8 +100,8 @@
         <p>{neos:backend.translate(id: 'storage.noEntries')}</p>
       </f:else>
     </f:if>
-    <div class="page-navigation">
-      <f:if condition="{pages}">
+    <f:if condition="{pages}">
+      <div class="page-navigation">
         <ul class="neos-fluid-widget-paginator">
           <f:if condition="{currentPage} > 1">
             <li class="previous">
@@ -126,8 +126,8 @@
             </li>
           </f:if>
         </ul>
-      </f:if>
-    </div>
+      </div>
+    </f:if>
     <p><f:link.action action="index" class="neos-button">{neos:backend.translate(id: 'storage.backToIdentifiers')}</f:link.action></p>
   </div>
 </f:section>
