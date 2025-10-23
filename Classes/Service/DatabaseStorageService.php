@@ -54,6 +54,12 @@ class DatabaseStorageService
     protected $nodeTypesIgnoredInFinisher;
 
     /**
+     * @var string
+     * @Flow\InjectConfiguration(path="listPrefix", package="Wegmeister.DatabaseStorage")
+     */
+    protected $listPrefix;
+
+    /**
      * @var array
      * @Flow\InjectConfiguration(path="nodeTypesIgnoredInExport", package="Wegmeister.DatabaseStorage")
      */
@@ -440,15 +446,22 @@ class DatabaseStorageService
             return $dateTime->format($this->datetimeFormat);
         }
         if (is_array($value)) {
-            foreach ($value as &$innerValue) {
-                $innerValue = $this->getStringValue($innerValue, $indent + 1);
+            $lines = [];
+
+            foreach ($value as $key => $innerValue) {
+                $stringValue = $this->getStringValue($innerValue, $indent + 1);
+
+                // If key is numeric, treat as flat array item
+                if (is_int($key)) {
+                    $lines[] = $stringValue;
+                } else {
+                    // Associative: keep key as part of output
+                    $lines[] = sprintf('%s: %s', $key, $stringValue);
+                }
             }
-            $prefix = str_repeat(' ', $indent * 2) . '- ';
-            return sprintf(
-                '%s%s',
-                $prefix,
-                implode("\r\n" . $prefix, $value)
-            );
+
+            $prefix = str_repeat(' ', $indent * 2) . $this->listPrefix . ' ';
+            return $prefix . implode("\r\n" . $prefix, $lines);
         }
 
         return '';

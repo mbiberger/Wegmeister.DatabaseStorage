@@ -31,6 +31,7 @@ Wegmeister:
     subject: 'Database Export'
     datetimeFormat: 'Y-m-d H:i:s'
     itemsPerPage: 20
+    listPrefix: '-'
     nodeTypesIgnoredInFinisher:
       - 'Neos.Form.Builder:Section'
       - 'Neos.Form.Builder:StaticText'
