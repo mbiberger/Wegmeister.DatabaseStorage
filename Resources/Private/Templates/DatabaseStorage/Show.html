@@ -100,6 +100,34 @@
         <p>{neos:backend.translate(id: 'storage.noEntries')}</p>
       </f:else>
     </f:if>
+    <f:if condition="{pages}">
+      <div class="page-navigation">
+        <ul class="neos-fluid-widget-paginator">
+          <f:if condition="{currentPage} > 1">
+            <li class="previous">
+              <f:link.action action="show" arguments="{identifier: identifier, currentPage: '{currentPage - 1}'}" class="neos-pagination-link">&laquo;</f:link.action>
+            </li>
+          </f:if>
+          <f:for each="{pages}" as="page">
+            <li class="{f:if(condition: page.isCurrent, then: 'current')} {f:if(condition: page.isLast, then: 'last')}">
+              <f:if condition="{page.isCurrent}">
+                <f:then>
+                  {page.pageNumber}
+                </f:then>
+                <f:else>
+                  <f:link.action action="show" arguments="{identifier: identifier, currentPage: page.pageNumber}" class="neos-pagination-link">{page.pageNumber}</f:link.action>
+                </f:else>
+              </f:if>
+            </li>
+          </f:for>
+          <f:if condition="{currentPage} < (totalEntriesCount / itemsPerPage -> f:format.number(decimals: 0, roundingMode: 'CEIL'))">
+            <li class="next">
+              <f:link.action action="show" arguments="{identifier: identifier, currentPage: '{currentPage + 1}'}" class="neos-pagination-link">&raquo;</f:link.action>
+            </li>
+          </f:if>
+        </ul>
+      </div>
+    </f:if>
     <p><f:link.action action="index" class="neos-button">{neos:backend.translate(id: 'storage.backToIdentifiers')}</f:link.action></p>
   </div>
 </f:section>

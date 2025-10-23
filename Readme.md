@@ -77,6 +77,8 @@ Wegmeister:
     subject: 'Database Export'
     # DateTime format if the datetime is included in the export
     datetimeFormat: 'Y-m-d H:i:s'
+    # Number of entries per page on the identifier list view
+    itemsPerPage: 20
     # Form element types that should not be stored by the finisher (for Node-based forms)
     nodeTypesIgnoredInFinisher:
       - 'Neos.Form.Builder:Section'

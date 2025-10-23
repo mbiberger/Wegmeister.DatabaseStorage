@@ -116,15 +116,20 @@ class DatabaseStorageController extends ActionController
      * List entries of a given storage identifier.
      *
      * @param string $identifier The storage identifier.
-     *
+     * @param int $currentPage
      * @return void
-     * @throws \Exception
+     * @throws StopActionException
      */
-    public function showAction(string $identifier)
+    public function showAction(string $identifier, int $currentPage = 1)
     {
+        $itemsPerPage = (int)($this->settings['itemsPerPage'] ?? 10);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+
         $this->databaseStorageService = new DatabaseStorageService($identifier);
 
-        $entries = $this->databaseStorageRepository->findByStorageidentifier($identifier);
+        $totalEntriesCount = $this->databaseStorageRepository->getAmountOfEntriesByStorageIdentifier($identifier);
+        $entries = $this->databaseStorageRepository->findPaginatedByStorageidentifier($identifier, $itemsPerPage, $offset);
+
         $formElementLabels = $this->databaseStorageService->getFormElementLabels(
             $entries
         );
@@ -149,6 +154,21 @@ class DatabaseStorageController extends ActionController
         $this->view->assign('titles', $formElementLabels);
         $this->view->assign('entries', $entries);
         $this->view->assign('datetimeFormat', $this->settings['datetimeFormat']);
+        $this->view->assign('totalEntriesCount', $totalEntriesCount);
+        $this->view->assign('currentPage', $currentPage);
+        $this->view->assign('itemsPerPage', $itemsPerPage);
+
+        $numberOfPages = (int)ceil($totalEntriesCount / $itemsPerPage);
+        $pages = [];
+        for ($page = 1; $page <= $numberOfPages; $page++) {
+            $pages[] = [
+                'pageNumber' => $page,
+                'isCurrent' => ($page === $currentPage),
+                'isFirst' => ($page === 1),
+                'isLast' => ($page === $numberOfPages),
+            ];
+        }
+        $this->view->assign('pages', $pages);
     }
 
     /**

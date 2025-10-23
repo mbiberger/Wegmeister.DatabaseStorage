@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
+use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Repository;
 use Neos\Flow\Persistence\QueryInterface;
 use Neos\Flow\ResourceManagement\PersistentResource;
@@ -118,7 +119,7 @@ class DatabaseStorageRepository extends Repository
 
     /**
      * Removes an object from this repository.
-     * 
+     *
      * If $removeAttachedResources is true, checks if the given storage entry
      * has a property with a resource. If a resource property is found,
      * the resource will be deleted.
@@ -193,5 +194,25 @@ class DatabaseStorageRepository extends Repository
         );
 
         return $query->count();
+    }
+
+    /**
+     * Finds database storage entries by storage identifier with pagination.
+     *
+     * @param string $storageIdentifier
+     * @param int $limit
+     * @param int $offset
+     * @return QueryResultInterface
+     */
+    public function findPaginatedByStorageidentifier(string $storageIdentifier, int $limit, int $offset): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->equals('storageidentifier', $storageIdentifier)
+        )
+            ->setLimit($limit)
+            ->setOffset($offset);
+
+        return $query->execute();
     }
 }
